@@ -1,0 +1,21 @@
+name: Blogs CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install Requirements
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    - name: Setup environment variables and Run pylint
+      env:
+        BLOGS_SECRET_KEY: ${{ secrets.BLOGS_SECRET_KEY }}
+      run: |
+        pylint ./blogs_drf 
+    - name: Run Pycodestyle
+      run: |
+        pycodestyle ./blogs_drf
