@@ -1,3 +1,3 @@
-from django.test import TestCase
+"""Test of Authentication"""
 
 # Create your tests here.

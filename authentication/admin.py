@@ -1,3 +1,3 @@
-from django.contrib import admin
+"""Admin Panel URL Configuration"""
 
 # Register your models here.
