@@ -6,26 +6,22 @@ delete a user. It is also used to create new tokens, refresh and verify the
 tokens.
 """
 
-from django.urls import path
+from django.urls import include, re_path
+
+# from django.conf.urls import url
 from rest_framework import routers
-from authentication.views import (UserRegisterView)
+from authentication.views import UserViewSet
 
 # pylint: disable=invalid-name
-app_name = 'authentication'
+app_name = "authentication"
 router = routers.DefaultRouter()
 
 # For retrieve, update, and delete a user
-# router.register("user", UserViewSet, basename="user-view")
-# For retrieve all the users
-# router.register("users", AllUserViewSet, basename="users-view")
+router.register("user", UserViewSet, basename="user-view")
 
 urlpatterns = [
-    path("register/user/", UserRegisterView.as_view(), name="register-user"),
-    # path("token/create/", CreateTokenView.as_view(), name="create-token"),
-    # path("token/refresh/", TokenRefreshView.as_view(), name="refresh-token"),
-    # path("token/verify/", TokenVerifyView.as_view(), name="verify-token"),
-    # path("login/", LoginView.as_view(), name="login-view"),
-    # path('register/', RegisterView.as_view(), name='register-view'),
+    re_path("", include("djoser.urls")),
+    re_path("", include("djoser.urls.jwt")),
 ]
 
 urlpatterns += router.urls

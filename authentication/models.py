@@ -28,12 +28,12 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    # def create_user(self, email, password=None, **extra_fields):
-    #     """Create and save a regular User with the given email and
-    #     password."""
-    #     extra_fields.setdefault("is_staff", False)
-    #     extra_fields.setdefault("is_superuser", False)
-    #     return self._create_user(email, password, **extra_fields)
+    def create_user(self, email, password=None, **extra_fields):
+        """Create and save a regular User with the given email and
+        password."""
+        extra_fields.setdefault("is_staff", False)
+        extra_fields.setdefault("is_superuser", False)
+        return self._create_user(email, password, **extra_fields)
 
     def create_superuser(self, email, password, **extra_fields):
         """Create Uuperuser
@@ -52,19 +52,10 @@ class UserManager(BaseUserManager):
 
 
 class User(AbstractUser):
-    """ User Model
+    """User Model
 
     This is the user model for the blogs_drf app. The user model is used
-    to map the user to the database. In this model we extend user with
-    followimg fields:
-    - email
-    - picture
-    - address
-    - phone number
-    And we use other builtin following fields:
-    - first_name
-    - last_name
-    - password
+    to map the user to the database.
     """
 
     username = None
