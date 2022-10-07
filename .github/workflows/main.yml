@@ -15,7 +15,9 @@ jobs:
       env:
         BLOGS_SECRET_KEY: ${{ secrets.BLOGS_SECRET_KEY }}
       run: |
+        pylint --ignore-paths=authentication/migrations ./authentication
         pylint ./blogs_drf 
     - name: Run Pycodestyle
       run: |
+        pycodestyle --exclude=authentication/migrations ./authentication
         pycodestyle ./blogs_drf

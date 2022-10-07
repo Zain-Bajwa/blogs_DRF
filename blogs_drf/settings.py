@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 import os
 from pathlib import Path
+from datetime import timedelta
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -31,6 +32,9 @@ DEBUG = os.environ.get("DEBUG") == "TRUE"
 ALLOWED_HOSTS = []
 
 
+# Default User model
+AUTH_USER_MODEL = "authentication.User"
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +44,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "djoser",
+    "rest_framework_simplejwt",
+    "rest_framework_swagger",
+    "authentication",
     "drf_yasg",
 ]
 
@@ -79,12 +88,12 @@ WSGI_APPLICATION = "blogs_drf.wsgi.application"
 
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get("DATABASE_NAME"),
-        'USER': os.environ.get("DATABASE_USER"),
-        'PASSWORD': os.environ.get("DATABASE_PASSWORD"),
-        'HOST': os.environ.get("DATABASE_HOST"),
-        'PORT': os.environ.get("DATABASE_PORT"),
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("DATABASE_NAME"),
+        "USER": os.environ.get("DATABASE_USER"),
+        "PASSWORD": os.environ.get("DATABASE_PASSWORD"),
+        "HOST": os.environ.get("DATABASE_HOST"),
+        "PORT": os.environ.get("DATABASE_PORT"),
     }
 }
 
@@ -95,8 +104,8 @@ DATABASES = {
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": (
-                "django.contrib.auth.password_validation." +
-                "UserAttributeSimilarityValidator"
+            "django.contrib.auth.password_validation."
+            + "UserAttributeSimilarityValidator"
         ),
     },
     {
@@ -132,9 +141,35 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 
+
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "/")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "authentication/static"),
+    # os.path.join(BASE_DIR, 'core/templates/core')
+)
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_URL = "/media/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTTokenUserAuthentication",
+    ),
+}
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=10),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+    "USER_ID_FIELD": "id",
+    "USER_ID_CLAIM": "user_id",
+}
