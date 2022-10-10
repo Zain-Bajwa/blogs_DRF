@@ -18,8 +18,9 @@ from rest_framework.mixins import (
     UpdateModelMixin,
 )
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework_simplejwt.views import TokenViewBase
 from authentication.serializers import (
-    UserRegisterSerializer, UserViewSerializer
+    UserRegisterSerializer, UserViewSerializer, CreateTokneSerialzer
 )
 from authentication.permissions import OwnProfilePermission
 from authentication.models import User
@@ -58,3 +59,14 @@ class UserViewSet(
         if self.action == "create":
             return UserRegisterSerializer
         return self.serializer_class
+
+
+class CreateTokenView(TokenViewBase):
+    """Create Token View
+
+    This view is used to create a new token. This is inherited from the
+    TokenViewBase of the rest_framework_simplejwt.views. The purpose of this
+    view is to create a new token and override the default_error_message.
+    """
+
+    serializer_class = CreateTokneSerialzer
