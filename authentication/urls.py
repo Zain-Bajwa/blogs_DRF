@@ -7,10 +7,12 @@ tokens.
 """
 
 from django.urls import include, re_path
-
-# from django.conf.urls import url
+from rest_framework_simplejwt.views import (
+    TokenRefreshView,
+    TokenVerifyView,
+)
 from rest_framework import routers
-from authentication.views import UserViewSet
+from authentication.views import UserViewSet, CreateTokenView
 
 # pylint: disable=invalid-name
 app_name = "authentication"
@@ -21,7 +23,10 @@ router.register("user", UserViewSet, basename="user-view")
 
 urlpatterns = [
     re_path("", include("djoser.urls")),
-    re_path("", include("djoser.urls.jwt")),
+    re_path("jwt/create/", CreateTokenView.as_view(), name="create-token"),
+    re_path("jwt/refresh/", TokenRefreshView.as_view(), name="refresh-token"),
+    re_path("jwt/verify/", TokenVerifyView.as_view(), name="verify-token"),
+
 ]
 
 urlpatterns += router.urls

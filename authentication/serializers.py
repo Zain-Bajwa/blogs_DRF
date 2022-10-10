@@ -6,6 +6,8 @@ to format the user profile data into json format.
 """
 
 from rest_framework import serializers
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.password_validation import validate_password
 from authentication.models import User
 
@@ -62,3 +64,25 @@ class UserViewSerializer(serializers.ModelSerializer):
             "phone_no",
             "image",
         ]
+
+
+class CreateTokneSerialzer(TokenObtainPairSerializer):
+    """Create Token Serializer
+    This class is used to create the token. The token is created using the
+    TokenObtainPairSerializer class. The token is returned in a json format.
+    In this class the default error message is overridden. And also add some
+    additional information of user.
+    """
+
+    default_error_messages = {
+                        'no_active_account': _('Invalid username/password.')
+    }
+
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        user = {}
+        user["id"] = self.user.id
+        user["first_name"] = self.user.first_name
+        user["last_name"] = self.user.last_name
+        data["user"] = user
+        return data
